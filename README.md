@@ -13,7 +13,7 @@ Jo and Kevins Course Assignment for Javascript
  
 ## About
  
-[Provide a brief overview of the project, its purpose, and its goals.]
+This project presents a client-side social media application that allows users to perform core CRUD (Create, Read, Update, Delete) operations on their posts. Along with these essential features, the app includes user authentication and interactive functionalities like following/unfollowing users, commenting, and reacting to posts using emojis.
  
 ## Features
  
