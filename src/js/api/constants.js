@@ -1,7 +1,13 @@
-// Use Postman, or JavaScript to get your API key
-// In Workflow we will learn how to secure this information
-export const API_KEY = "replace-with-your-key";
-
+export const API_KEY = "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532";
+export const ACCESS_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJpZEZhcmVlZCIsImVtYWlsIjoidGVzdDAwN0BzdHVkLm5vcm9mZi5ubyIsImlhdCI6MTcyNzM5NDY3Nn0.4CPRCvHSscACkmm1nHMkr-UbIc-wQwB4wV4d4P1ieDQ";
+const options = {
+  headers: {
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJpZEZhcmVlZCIsImVtYWlsIjoidGVzdDAwN0BzdHVkLm5vcm9mZi5ubyIsImlhdCI6MTcyNzM5NDY3Nn0.4CPRCvHSscACkmm1nHMkr-UbIc-wQwB4wV4d4P1ieDQ",
+    "X-Noroff-API-Key": "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532",
+  },
+};
 export const API_BASE = "https://v2.api.noroff.dev";
 
 export const API_AUTH = `${API_BASE}/auth`;
