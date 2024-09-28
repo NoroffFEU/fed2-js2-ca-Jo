@@ -1,7 +1,13 @@
-// Use Postman, or JavaScript to get your API key
-// In Workflow we will learn how to secure this information
-export const API_KEY = "replace-with-your-key";
-
+import {getAccessToken} from "../ui/auth/login.js";
+export const API_KEY = "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532";
+export const ACCESS_TOKEN = getAccessToken()
+const options = {
+  headers: {
+    Authorization:
+        `Bearer ${localStorage.getItem("token")}`,
+    "X-Noroff-API-Key": "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532",
+  },
+};
 export const API_BASE = "https://v2.api.noroff.dev";
 
 export const API_AUTH = `${API_BASE}/auth`;
