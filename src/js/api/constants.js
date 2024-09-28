@@ -1,10 +1,10 @@
+import {getAccessToken} from "../ui/auth/login.js";
 export const API_KEY = "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532";
-export const ACCESS_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJpZEZhcmVlZCIsImVtYWlsIjoidGVzdDAwN0BzdHVkLm5vcm9mZi5ubyIsImlhdCI6MTcyNzM5NDY3Nn0.4CPRCvHSscACkmm1nHMkr-UbIc-wQwB4wV4d4P1ieDQ";
+export const ACCESS_TOKEN = getAccessToken()
 const options = {
   headers: {
     Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWJpZEZhcmVlZCIsImVtYWlsIjoidGVzdDAwN0BzdHVkLm5vcm9mZi5ubyIsImlhdCI6MTcyNzM5NDY3Nn0.4CPRCvHSscACkmm1nHMkr-UbIc-wQwB4wV4d4P1ieDQ",
+        `Bearer ${localStorage.getItem("token")}`,
     "X-Noroff-API-Key": "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532",
   },
 };

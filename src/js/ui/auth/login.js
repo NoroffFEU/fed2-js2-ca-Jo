@@ -1,4 +1,5 @@
 import { API_AUTH_LOGIN } from '../../api/constants';
+
 export async function onLogin(event) {
     event.preventDefault();
 
@@ -11,7 +12,6 @@ export async function onLogin(event) {
     };
 
     try {
-        const API_KEY = "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532";
         const response = await fetch(API_AUTH_LOGIN, {
             method: 'POST',
             headers: {
@@ -33,4 +33,8 @@ export async function onLogin(event) {
         console.error('Error during login:', error);
         alert('An error occurred during login.');
     }
+}
+
+export function getAccessToken() {
+    return localStorage.getItem('token');
 }
