@@ -23,7 +23,7 @@ export async function onLogin(event) {
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem('token', data.data.accessToken);
-            window.location.href = '/post/index.html';
+            window.location.href = '/post/';
         } else {
             const errorData = await response.json();
             console.error('Login failed:', errorData.message);
