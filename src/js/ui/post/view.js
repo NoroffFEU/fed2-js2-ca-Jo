@@ -1,7 +1,8 @@
 import { getPostByIdAPI, getPostsAPI } from "/src/js/api/post/read.js";
 import { onDeletePost } from "/src/js/ui/post/delete.js";
 import { updatePost } from "/src/js/ui/post/update.js";
-
+const btnClear = document.getElementById("btnClear")
+const searchButton = document.getElementById("searchButton")
 let allPosts = [];
 let allTags = new Set();
 
@@ -168,5 +169,14 @@ document.getElementById("searchInput").addEventListener("input", (event) => {
       post.body.toLowerCase().includes(searchText)
     );
   });
-  renderPosts(filteredPosts);
+    renderPosts(filteredPosts)
 });
+
+
+
+
+btnClear.onclick = function () {
+  localStorage.clear();
+  if(localStorage.length === 0)
+    lsOutput.innerHTML = "";
+};

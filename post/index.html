@@ -11,13 +11,15 @@
 
   <body>
     <div class="container">
-      <h1>Post Feed</h1>
+      <div class="logout"><button id="btnClear"><a href="/index.html">Logout</a></button></div>
+      <h1 class="post-title">Post Feed</h1>
+
       <div id="filter-search" class="filter-search">
         <input type="text" id="searchInput" placeholder="Search posts..." />
         <select id="filterSelect">
           <option value="">Filter by Tag</option>
         </select>
-        <button id="searchButton">Post</button>
+        <button id=""><a href="/post/create/">Post</a></button>
         <button id="searchButton">Search</button>
       </div>
       <div id="postFeed" class="post-feed"></div>

@@ -34,7 +34,3 @@ export async function onLogin(event) {
         alert('An error occurred during login.');
     }
 }
-
-export function getAccessToken() {
-    return localStorage.getItem('token');
-}

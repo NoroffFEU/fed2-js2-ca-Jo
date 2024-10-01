@@ -1,4 +1,6 @@
-import {getAccessToken} from "../ui/auth/login.js";
+export function getAccessToken() {
+  return localStorage.getItem('token');
+}
 export const API_KEY = "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532";
 export const ACCESS_TOKEN = getAccessToken()
 const options = {
