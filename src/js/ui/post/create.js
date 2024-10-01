@@ -1,5 +1,4 @@
 import { API_SOCIAL_POSTS, ACCESS_TOKEN } from "../../api/constants";
-
 export async function onCreatePost(event) {
   event.preventDefault();
   const form = new FormData(event.target);

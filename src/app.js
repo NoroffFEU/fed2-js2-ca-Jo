@@ -1,3 +1,3 @@
-import "./css/style.css"; // This should remain the same
-import router from "./js/router/index.js"; // Update this to point to the correct router file
+import "./css/style.css";
+import router from "./js/router/index.js";
 await router(window.location.pathname);

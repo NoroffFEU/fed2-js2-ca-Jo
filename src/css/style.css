@@ -164,3 +164,30 @@ button:hover {
   text-decoration: none;
   cursor: pointer;
 }
+.title {
+  font-size: 3rem;
+  font-weight: 600;
+  text-align: left;
+  color: #ffffff;
+  text-shadow:
+          -1px -1px 0 #000,
+          1px -1px 0 #000,
+          -1px 1px 0 #000,
+          1px 1px 0 #000;
+}
+.titleDescription {
+  font-size: 1.5rem;
+}
+.description {
+  padding-right: 10rem;
+  padding-bottom: 20rem;
+}
+.post-title {
+  font-weight: 600;
+  font-size: 2rem;
+}
+
+.logout {
+  text-align: right;
+  padding-bottom: 1rem;
+}
