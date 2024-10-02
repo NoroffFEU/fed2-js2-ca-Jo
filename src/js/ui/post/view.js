@@ -1,8 +1,9 @@
 import { getPostByIdAPI, getPostsAPI } from "/src/js/api/post/read.js";
 import { onDeletePost } from "/src/js/ui/post/delete.js";
-import { updatePost } from "/src/js/ui/post/update.js";
-const btnClear = document.getElementById("btnClear")
-const emojis = ["😀", "😂", "😍", "😢", "😡"];
+import {updatePost} from "./update.js";
+import {API_BASE, API_KEY} from "../../api/constants.js";
+const btnClear = document.getElementById("btnClear");
+const likeEmoji = "👍"; // Only the like emoji
 let allPosts = [];
 let allTags = new Set();
 
@@ -41,9 +42,9 @@ function renderPosts(posts) {
   postFeed.innerHTML = "";
 
   posts.forEach((post) => {
-    const postElement = document.createElement("div");
     const reactions = post.reactions || {};
-    postElement.setAttribute('data-id', post.id);
+    const postElement = document.createElement("div");
+    postElement.setAttribute("data-id", post.id);
     postElement.className = "post p-4 backdrop transition-shadow";
 
     postElement.innerHTML = `
@@ -56,10 +57,10 @@ function renderPosts(posts) {
       </div>
       ${post.media?.url ? `<img src="${post.media.url}" alt="${post.media.alt}" class="mt-4" />` : ""}
       <div class="mt-4">
-        ${emojis.map(emoji => `<button class="emoji-button">${emoji}</button>`).join('')}
+        <button class="like-button">${likeEmoji}</button>
       </div>
       <div class="mt-2 reaction-container">
-        ${Object.entries(reactions).map(([emoji, count]) => `<span class="reaction">${emoji}: ${count}</span>`).join(' ')}
+        ${reactions[likeEmoji] ? `<span class="reaction">${likeEmoji}: ${reactions[likeEmoji]}</span>` : ""}
       </div>
       <button onclick="viewPost(${post.id})" class="bg-blue-600 text-white rounded-md p-2 mt-4 hover:bg-blue-700">View</button>
       <button onclick="deletePost(event, ${post.id})" class="bg-red-600 text-white rounded-md p-2 mt-4 hover:bg-red-700 ml-4">Delete</button>
@@ -68,22 +69,21 @@ function renderPosts(posts) {
 
     postFeed.appendChild(postElement);
 
-    const emojiButtons = postElement.querySelectorAll('.emoji-button');
-    emojiButtons.forEach(button => {
-      button.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        const emoji = button.textContent;
-        reactWithEmoji(post.id, emoji);
-      });
-    });
-    const updateButton = postElement.querySelector('.update-button');
-    updateButton.addEventListener('click', (event) => {
+    const likeButton = postElement.querySelector(".like-button");
+    likeButton.addEventListener("click", (event) => {
+      event.preventDefault();
       event.stopPropagation();
-      updatePost_(post.id);
+      reactWithLike(post.id);
+    });
+
+    const updateButton = postElement.querySelector(".update-button");
+    updateButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      window.updatePost_(post.id);
     });
   });
 }
+
 window.updatePost_ = (postId) => updatePost(postId);
 window.deletePost = (event, postId) => onDeletePost(event, postId);
 
@@ -101,53 +101,26 @@ export async function viewPost(postId) {
     const postElement = document.createElement("div");
     postElement.className = "post-detail p-4 backdrop";
 
-    let tagsDisplay = "";
-    if (post.tags && post.tags.length > 0) {
-      tagsDisplay = `<span class="text-gray-500">Tags: ${post.tags.join(
-        ", "
-      )}</span>`;
-    } else {
-      tagsDisplay = `<span class="text-gray-500">Tags: None</span>`; 
-    }
-    let mediaDisplay = "";
-    if (post.media && post.media.url) {
-      mediaDisplay = `<img src="${post.media.url}" alt="${
-        post.media.alt || "No description"
-      }" class="mt-4" />`;
-    } else {
-      mediaDisplay = `<p class="text-gray-500">No image available</p>`; 
-    }
-    let commentsDisplay = "";
-    if (post._count.comments > 0) {
-      commentsDisplay = `<h3 class="text-lg font-semibold mt-4">Comments:</h3>`;
-      post.comments.forEach((comment) => {
-        commentsDisplay += `
-          <div class="comment bg-gray-100 p-2 mt-2 rounded">
-            <p><strong>${comment.owner || "Anonymous"}</strong>: ${
-          comment.body || "No comment text"
-        }</p>
-            <span class="text-gray-500">${new Date(
-              comment.created
-            ).toLocaleDateString()}</span>
-          </div>
-        `;
-      });
-    } else {
-      commentsDisplay = `<p class="text-gray-500">No comments available</p>`;
-    }
+    let tagsDisplay = post.tags && post.tags.length > 0
+        ? `<span class="text-gray-500">Tags: ${post.tags.join(", ")}</span>`
+        : `<span class="text-gray-500">Tags: None</span>`;
+
+    let mediaDisplay = post.media && post.media.url
+        ? `<img src="${post.media.url}" alt="${post.media.alt || "No description"}" class="mt-4" />`
+        : `<p class="text-gray-500">No image available</p>`;
+
+    let commentsDisplay = post._count.comments > 0
+        ? `<h3 class="text-lg font-semibold mt-4">Comments:</h3>`
+        : `<p class="text-gray-500">No comments available</p>`;
 
     postElement.innerHTML = `
-      <h2 class="text-2xl font-bold text-blue-600">${
-        post.title || "No title"
-      }</h2>
+      <h2 class="text-2xl font-bold text-blue-600">${post.title || "No title"}</h2>
       <p class="text-gray-700 my-4">${post.body || "No content available"}</p>
-      ${tagsDisplay} 
-      <p class="text-gray-500">Created at: ${new Date(
-        post.created
-      ).toLocaleDateString()}</p>
-      ${mediaDisplay} 
+      ${tagsDisplay}
+      <p class="text-gray-500">Created at: ${new Date(post.created).toLocaleDateString()}</p>
+      ${mediaDisplay}
       <button onclick="goBackToPosts()" class="bg-blue-600 text-white rounded-md p-2 mt-4 hover:bg-blue-700">Go Back to Feed</button>
-      ${commentsDisplay} 
+      ${commentsDisplay}
     `;
 
     postFeed.appendChild(postElement);
@@ -162,56 +135,62 @@ export function goBackToPosts() {
   renderPosts(allPosts);
 }
 window.goBackToPosts = goBackToPosts;
+
 document.getElementById("filterSelect").addEventListener("change", (event) => {
   const selectedTag = event.target.value;
   if (selectedTag) {
-    const filteredPosts = allPosts.filter((post) =>
-      post.tags.includes(selectedTag)
-    );
+    const filteredPosts = allPosts.filter((post) => post.tags.includes(selectedTag));
     renderPosts(filteredPosts);
   } else {
     renderPosts(allPosts);
   }
 });
+
 document.getElementById("searchInput").addEventListener("input", (event) => {
   const searchText = event.target.value.toLowerCase();
   const filteredPosts = allPosts.filter((post) => {
     return (
-      post.title.toLowerCase().includes(searchText) ||
-      post.body.toLowerCase().includes(searchText)
+        post.title.toLowerCase().includes(searchText) ||
+        post.body.toLowerCase().includes(searchText)
     );
   });
-    renderPosts(filteredPosts)
+  renderPosts(filteredPosts);
 });
 
 btnClear.onclick = function () {
   localStorage.clear();
-  if(localStorage.length === 0)
-    lsOutput.innerHTML = "";
+  if (localStorage.length === 0) lsOutput.innerHTML = "";
 };
 
-window.reactWithEmoji = async (postId, emoji) => {
-  const post = allPosts.find(p => p.id === postId);
+window.reactWithLike = async (postId) => {
+  const post = allPosts.find((p) => p.id === postId);
   if (!post) return;
 
-  if (!post.reactions) {
-    post.reactions = {};
+  if (post.reactions && post.reactions[likeEmoji]) {
+    alert("You can only like this post once!");
+    return;
   }
+  try {
+    const response = await fetch(`${API_BASE}/social/posts/${postId}/react/👍`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+      },
+    });
 
-  post.reactions[emoji] = (post.reactions[emoji] || 0) + 1;
+    if (!response.ok) {
+      new Error("Failed to react to post");
+    }
 
-  await updatePostReactions(postId, post.reactions);
-
-  updatePostReactionsInDOM(postId, post.reactions);
+    post.reactions = post.reactions || {};
+    post.reactions[likeEmoji] = 1;
+    updatePostReactionsInDOM(postId, post.reactions);
+  } catch (error) {
+    console.error("Error reacting to post:", error);
+  }
 };
 
-async function updatePostReactions(postId, reactions) {
-  try {
-    await updatePost(postId, { reactions });
-  } catch (error) {
-    console.error("Error updating reactions:", error);
-  }
-}
 async function updatePostReactionsInDOM(postId, reactions) {
   const postElement = document.querySelector(`.post[data-id="${postId}"]`);
   if (!postElement) return;
@@ -223,9 +202,9 @@ async function updatePostReactionsInDOM(postId, reactions) {
     postElement.appendChild(reactionContainer);
   }
 
-  const updatedReactionsHTML = Object.entries(reactions).map(([emoji, count]) => `
-    <span class="reaction">${emoji}: ${count}</span>
-  `).join(' ');
+  const updatedReactionsHTML = Object.entries(reactions).map(([emoji, count]) => {
+    return `<span class="reaction">${emoji}: ${count}</span>`;
+  }).join(" ");
 
   reactionContainer.innerHTML = updatedReactionsHTML;
 }
