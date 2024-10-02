@@ -2,7 +2,7 @@ import { getPostByIdAPI, getPostsAPI } from "/src/js/api/post/read.js";
 import { onDeletePost } from "/src/js/ui/post/delete.js";
 import { updatePost } from "/src/js/ui/post/update.js";
 const btnClear = document.getElementById("btnClear")
-const searchButton = document.getElementById("searchButton")
+const emojis = ["😀", "😂", "😍", "😢", "😡"];
 let allPosts = [];
 let allTags = new Set();
 
@@ -39,37 +39,49 @@ function populateTagFilter(tags) {
 function renderPosts(posts) {
   const postFeed = document.getElementById("postFeed");
   postFeed.innerHTML = "";
+
   posts.forEach((post) => {
     const postElement = document.createElement("div");
+    const reactions = post.reactions || {};
+    postElement.setAttribute('data-id', post.id);
     postElement.className = "post p-4 backdrop transition-shadow";
+
     postElement.innerHTML = `
-            <h2 class="text-xl font-semibold text-blue-600">${post.title}</h2>
-            <p class="text-gray-700 my-2">${post.body}</p>
-            <span class="text-gray-500">Tags: ${post.tags.join(", ")}</span>
-            <div class="mt-4">
-                <h4 class="text-lg font-semibold text-gray-800">Author: ${
-                  post.author?.name || "Unknown"
-                }</h4>
-                <p class="text-gray-500">Email: ${
-                  post.author?.email || "N/A"
-                }</p>
-            </div>
-            ${
-              post.media?.url
-                ? `<img src="${post.media.url}" alt="${post.media.alt}" class="mt-4" />`
-                : ""
-            }
-            <button onclick="viewPost(${
-              post.id
-            })" class="bg-blue-600 text-white rounded-md p-2 mt-4 hover:bg-blue-700">View</button>
-            <button onclick="deletePost(event, ${
-              post.id
-            })" class="bg-red-600 text-white rounded-md p-2 mt-4 hover:bg-red-700 ml-4">Delete</button>
-            <button onclick="updatePost_(${
-              post.id
-            })" class="bg-purple-600 text-white rounded-md p-2 mt-4 hover:bg-purple-700 ml-4">Update</button>
-        `;
+      <h2 class="text-xl font-semibold text-blue-600">${post.title}</h2>
+      <p class="text-gray-700 my-2">${post.body}</p>
+      <span class="text-gray-500">Tags: ${post.tags.join(", ")}</span>
+      <div class="mt-4">
+        <h4 class="text-lg font-semibold text-gray-800">Author: ${post.author?.name || "Unknown"}</h4>
+        <p class="text-gray-500">Email: ${post.author?.email || "N/A"}</p>
+      </div>
+      ${post.media?.url ? `<img src="${post.media.url}" alt="${post.media.alt}" class="mt-4" />` : ""}
+      <div class="mt-4">
+        ${emojis.map(emoji => `<button class="emoji-button">${emoji}</button>`).join('')}
+      </div>
+      <div class="mt-2 reaction-container">
+        ${Object.entries(reactions).map(([emoji, count]) => `<span class="reaction">${emoji}: ${count}</span>`).join(' ')}
+      </div>
+      <button onclick="viewPost(${post.id})" class="bg-blue-600 text-white rounded-md p-2 mt-4 hover:bg-blue-700">View</button>
+      <button onclick="deletePost(event, ${post.id})" class="bg-red-600 text-white rounded-md p-2 mt-4 hover:bg-red-700 ml-4">Delete</button>
+      <button class="bg-purple-600 text-white rounded-md p-2 mt-4 hover:bg-purple-700 ml-4 update-button">Update</button>
+    `;
+
     postFeed.appendChild(postElement);
+
+    const emojiButtons = postElement.querySelectorAll('.emoji-button');
+    emojiButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const emoji = button.textContent;
+        reactWithEmoji(post.id, emoji);
+      });
+    });
+    const updateButton = postElement.querySelector('.update-button');
+    updateButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      updatePost_(post.id);
+    });
   });
 }
 window.updatePost_ = (postId) => updatePost(postId);
@@ -129,13 +141,13 @@ export async function viewPost(postId) {
         post.title || "No title"
       }</h2>
       <p class="text-gray-700 my-4">${post.body || "No content available"}</p>
-      ${tagsDisplay} <!-- Only display if tags exist -->
+      ${tagsDisplay} 
       <p class="text-gray-500">Created at: ${new Date(
         post.created
       ).toLocaleDateString()}</p>
-      ${mediaDisplay} <!-- Media display -->
+      ${mediaDisplay} 
       <button onclick="goBackToPosts()" class="bg-blue-600 text-white rounded-md p-2 mt-4 hover:bg-blue-700">Go Back to Feed</button>
-      ${commentsDisplay} <!-- Comments display -->
+      ${commentsDisplay} 
     `;
 
     postFeed.appendChild(postElement);
@@ -172,11 +184,48 @@ document.getElementById("searchInput").addEventListener("input", (event) => {
     renderPosts(filteredPosts)
 });
 
-
-
-
 btnClear.onclick = function () {
   localStorage.clear();
   if(localStorage.length === 0)
     lsOutput.innerHTML = "";
 };
+
+window.reactWithEmoji = async (postId, emoji) => {
+  const post = allPosts.find(p => p.id === postId);
+  if (!post) return;
+
+  if (!post.reactions) {
+    post.reactions = {};
+  }
+
+  post.reactions[emoji] = (post.reactions[emoji] || 0) + 1;
+
+  await updatePostReactions(postId, post.reactions);
+
+  updatePostReactionsInDOM(postId, post.reactions);
+};
+
+async function updatePostReactions(postId, reactions) {
+  try {
+    await updatePost(postId, { reactions });
+  } catch (error) {
+    console.error("Error updating reactions:", error);
+  }
+}
+async function updatePostReactionsInDOM(postId, reactions) {
+  const postElement = document.querySelector(`.post[data-id="${postId}"]`);
+  if (!postElement) return;
+
+  let reactionContainer = postElement.querySelector('.reaction-container');
+  if (!reactionContainer) {
+    reactionContainer = document.createElement('div');
+    reactionContainer.className = 'reaction-container mt-2';
+    postElement.appendChild(reactionContainer);
+  }
+
+  const updatedReactionsHTML = Object.entries(reactions).map(([emoji, count]) => `
+    <span class="reaction">${emoji}: ${count}</span>
+  `).join(' ');
+
+  reactionContainer.innerHTML = updatedReactionsHTML;
+}

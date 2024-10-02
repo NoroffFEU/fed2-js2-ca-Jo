@@ -1,6 +1,13 @@
 import { API_BASE, API_KEY } from "../../api/constants";
-import { getPosts } from "/src/js/ui/post/view.js"
+import { getPosts } from "/src/js/ui/post/view.js";
+
 export async function onDeletePost(event, postId) {
+  const confirmed = confirm("Are you sure you want to delete this post?");
+
+  if (!confirmed) {
+    return;
+  }
+
   try {
     const token = localStorage.getItem("token");
 
@@ -12,15 +19,15 @@ export async function onDeletePost(event, postId) {
     console.log(postId);
 
     const response = await fetch(
-      `https://v2.api.noroff.dev/social/posts/${postId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Noroff-API-Key": "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532",
-          Authorization: `Bearer ${token}`,
-        },
-      }
+        `https://v2.api.noroff.dev/social/posts/${postId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Noroff-API-Key": "7fd0f3fa-3c34-4f9a-8f28-95d00d9aa532",
+            Authorization: `Bearer ${token}`,
+          },
+        }
     );
 
     if (response.status === 401) {
