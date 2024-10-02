@@ -17,8 +17,7 @@ This project presents a client-side social media application that allows users t
  
 ## Features
  
-- [List key features of the project.]
-- [Highlight unique aspects or functionalities.]
+HTML, CSS, Javascript.
  
 ## Installation
  
