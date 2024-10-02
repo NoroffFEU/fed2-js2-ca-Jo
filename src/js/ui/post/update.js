@@ -16,8 +16,8 @@ function openUpdateForm(post) {
   updateForm.elements["title"].value = post.data.title || "";
   updateForm.elements["body"].value = post.data.body || "";
   updateForm.elements["tags"].value = post.data.tags
-    ? post.data.tags.join(", ")
-    : "";
+      ? post.data.tags.join(", ")
+      : "";
 
   console.log("Post Data:", post);
   updateForm.setAttribute("data-post-id", post.data.id);
@@ -26,10 +26,10 @@ function openUpdateForm(post) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const openModalBtn = document.getElementById("openModalBtn");
   const closeModalBtn = document.getElementById("closeModalBtn");
   const updateModal = document.getElementById("updateModal");
 
+  // Close modal when clicking outside of it
   window.addEventListener("click", (event) => {
     if (event.target === updateModal) {
       updateModal.style.display = "none";
@@ -49,9 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const updatedTitle = event.target.elements["title"].value;
     const updatedBody = event.target.elements["body"].value;
     const updatedTags = event.target.elements["tags"].value
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter((tag) => tag !== "");
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag !== "");
 
     console.log("Form Data:", {
       title: updatedTitle,
@@ -72,5 +72,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error updating post:", error);
     }
+  });
+
+  // Close modal button event listener
+  closeModalBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    updateModal.style.display = 'none';
   });
 });

@@ -191,3 +191,15 @@ button:hover {
   text-align: right;
   padding-bottom: 1rem;
 }
+.emoji-button {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.reaction {
+  margin-right: 8px;
+  font-size: 16px;
+}
