@@ -1,1 +1,3 @@
-export async function createPost({ title, body, tags, media }) {}
+export async function createPost({ title, body, tags, media }) {
+    
+}

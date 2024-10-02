@@ -1,6 +1,6 @@
 import { API_KEY } from "./constants";
 
-export function headers() {
+export function headers(API_KEY) {
   const headers = new Headers();
 
   if (API_KEY) {

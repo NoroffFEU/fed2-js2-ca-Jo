@@ -1,13 +1,76 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Noroff FED2 JS2 CA</title>
+    <title>Post Feed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/css/style.css" />
     <script type="module" src="/src/app.js"></script>
   </head>
+
   <body>
-    <h1>Post Page</h1>
+    <div class="container">
+      <div class="logout"><button id="btnClear"><a href="/index.html">Logout</a></button></div>
+      <h1 class="post-title">Post Feed</h1>
+
+      <div id="filter-search" class="filter-search">
+        <input type="text" id="searchInput" placeholder="Search posts..." />
+        <select id="filterSelect">
+          <option value="">Filter by Tag</option>
+        </select>
+        <button id=""><a href="/post/create/">Post</a></button>
+        <button id="searchButton">Search</button>
+      </div>
+      <div id="postFeed" class="post-feed"></div>
+    </div>
+
+    <script type="module">
+
+      import { getPosts, viewPost } from '/src/js/ui/post/view.js';
+      getPosts();
+    </script>
+
+    <div id="postModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" id="closeModal">&times;</span>
+        <div id="modalPostDetail"></div>
+      </div>
+    </div>
+    <div id="updateModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+      <div class="bg-white w-full max-w-xl mx-auto shadow-md rounded-lg p-6 relative">
+        <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+          &#x2715;
+        </button>
+        <form id="updateForm" class="bg-white">
+          <h2 class="text-lg font-bold mb-4">Update Post</h2>
+
+          <div class="mb-4">
+            <label for="title" class="block text-gray-700 font-bold mb-2">Post Title</label>
+            <input type="text" id="title" name="title" placeholder="Post Title"
+              class="border border-gray-300 rounded-md p-2 w-full" required />
+          </div>
+
+          <div class="mb-4">
+            <label for="body" class="block text-gray-700 font-bold mb-2">Post Body</label>
+            <textarea id="body" name="body" placeholder="Post Body" class="border border-gray-300 rounded-md p-2 w-full"
+              rows="6" required></textarea>
+          </div>
+
+          <div class="mb-4">
+            <label for="tags" class="block text-gray-700 font-bold mb-2">Tags (comma separated)</label>
+            <input type="text" id="tags" name="tags" placeholder="Tags (comma separated)"
+              class="border border-gray-300 rounded-md p-2 w-full" />
+          </div>
+
+          <button type="submit"
+            class="bg-purple-600 text-white rounded-md p-2 hover:bg-purple-700 transition duration-200 w-full">
+            Update Post
+          </button>
+        </form>
+      </div>
+    </div>
   </body>
+
 </html>

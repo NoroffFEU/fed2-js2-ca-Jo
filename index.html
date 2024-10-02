@@ -1,22 +1,86 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
+  <head>
+    <meta charset="UTF-8" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Noroff FED2 JS2 CA</title>
-  <script type="module" src="/src/app.js"></script>
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Noroff FED2 JS2 CA</title>
 
-<body>
-  <img src="/images/noroff-logo.png" alt="Noroff Logo" />
+      <link rel="stylesheet" href="/src/css/style.css">
+    <script type="module" src="/src/app.js"></script>
+      <script src="https://cdn.tailwindcss.com"></script>
+  </head>
 
-  <h1>Home</h1>
+  <body class="flex items-center justify-center min-h-screen bg-gray-100" style="background-image:url('public/images/background.jpg')">
+    <header>
 
-  <a href="/profile/">My Profile</a>
-  <a href="/auth/login/">Login</a>
-  <a href="/auth/register/">Register</a>
-  <button>Logout</button>
-</body>
+    </header>
+
+    <div class="description">
+        <h1 class="title">Sosialen</h1>
+        <p class="titleDescription">Connect with friends and the world around you on Sosialen.</p>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-8 w-96">
+         <h1 class="text-3xl font-semibold text-center mb-6">Create Account</h1>
+        <form name="register" class="space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        required
+                        maxlength="20"
+                        pattern="^[\w]+$"
+                        title="Please enter a username using only letters and numbers"
+                        class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        required
+                        pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
+                        title="Please enter a valid noroff.no or stud.noroff.no address"
+                        class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        required
+                        minlength="8"
+                        class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+            </div>
+
+            <div>
+                <label for="link" class="block text-sm font-medium text-gray-700">Profile Picture Link</label>
+                <input
+                        type="text"
+                        name="link"
+                        id="link"
+                        required
+                        class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+            </div>
+
+            <div class="flex justify-between items-center">
+                <a href="/auth/login/" class="text-sm text-purple-600 hover:underline">Already have an account? Login</a>
+                <button type="submit" class="bg-purple-600 text-white rounded-md px-4 py-2 hover:bg-purple-700 transition duration-200">Register</button>
+            </div>
+        </form>
+    </div>
+  </body>
+
 </html>

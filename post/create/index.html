@@ -1,16 +1,60 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Noroff FED2 JS2 CA</title>
+    <title>Create Post</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/css/style.css" />
     <script type="module" src="/src/app.js"></script>
   </head>
-  <body>
-    <h1>Create Post</h1>
 
-    <form name="createPost">
-      <button>Create Post</button>
-    </form>
+  <body class="bg-gray-100 p-6">
+    <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-8">
+      <form> <input type="button" value="<Back" onclick="history.back()"> </form><h1 class="text-2xl font-semibold mb-4">Create a Post</h1>
+
+      <form id="createPostForm" class="space-y-4">
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+          <input type="text" id="title" name="title" required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <div>
+          <label for="body" class="block text-sm font-medium text-gray-700">Body</label>
+          <textarea id="body" name="body" required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+        </div>
+
+        <div>
+          <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
+          <input type="text" id="tags" name="tags" placeholder="Comma-separated"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <div>
+          <label for="imageURL" class="block text-sm font-medium text-gray-700">Image URL</label>
+          <input type="url" id="imageURL" name="imageURL" pattern="https?://.*" placeholder="Enter a valid image URL"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+
+        <button type="submit"
+          class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+          Create Post
+        </button>
+      </form>
+    </div>
+
+    <script type="module">
+      import { onCreatePost } from '/src/js/ui/post/create.js';
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById('createPostForm');
+        form.addEventListener('submit', onCreatePost);
+      });
+    </script>
   </body>
+
 </html>
